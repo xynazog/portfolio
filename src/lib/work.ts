@@ -3,6 +3,24 @@
  * tile list (WorkList.astro) and the dedicated /work/[slug] pages.
  */
 
+export interface FlowNode {
+  id: string;
+  label: string;
+  sublabel?: string;
+}
+
+export interface FlowEdge {
+  from: string;
+  to: string;
+  label?: string;
+}
+
+export interface FlowDiagramSpec {
+  caption?: string;
+  nodes: FlowNode[];
+  edges: FlowEdge[];
+}
+
 export interface CaseStudy {
   slug: string;
   context: string;
@@ -19,6 +37,8 @@ export interface CaseStudy {
   /** Override for the "What we shipped" header — e.g. "What I shipped" when solo. */
   shippedHeader?: string;
   differently: string;
+  /** Optional architecture diagram, rendered between shipped and differently. */
+  diagram?: FlowDiagramSpec;
 }
 
 export const caseStudies: CaseStudy[] = [
@@ -55,6 +75,22 @@ export const caseStudies: CaseStudy[] = [
     ],
     differently:
       "Designed the RBAC model agent-aware from day one. We bolted MCP onto a system built for humans; an authz layer designed for both humans and agents would have been faster and safer.",
+    diagram: {
+      caption: "Unified Identity — request lifecycle",
+      nodes: [
+        { id: "idp",      label: "Customer IdP",                 sublabel: "Okta · Azure AD · Ping" },
+        { id: "sp",       label: "Splunk Enterprise Cloud",      sublabel: "SAML SP — auth lands here" },
+        { id: "scim",     label: "SCIM Provisioner",             sublabel: "mirrors state across clouds" },
+        { id: "rbac",     label: "RBAC Policy Evaluator",        sublabel: "fine-grained, request-time" },
+        { id: "resource", label: "Observability Cloud Resource", sublabel: "dashboard · query · metric" },
+      ],
+      edges: [
+        { from: "idp",  to: "sp",       label: "SAML AuthN" },
+        { from: "sp",   to: "scim",     label: "user / group event" },
+        { from: "scim", to: "rbac",     label: "provisioned principal" },
+        { from: "rbac", to: "resource", label: "allow" },
+      ],
+    },
   },
   {
     slug: "splunk-log-observer",
