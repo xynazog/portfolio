@@ -26,19 +26,10 @@
   --font-mono:    "Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   /* Type scale (size / line-height / tracking).
-     Display sizes use clamp() so the hero breathes on mobile without
-     a separate breakpoint cascade. */
-  --text-display-xl:                  clamp(4rem, 12vw, 8.5rem);
-  --text-display-xl--line-height:     0.95;
-  --text-display-xl--letter-spacing:  -0.035em;
-
-  --text-display-lg:                  clamp(3rem, 9vw, 6.375rem);
-  --text-display-lg--line-height:     0.98;
-  --text-display-lg--letter-spacing:  -0.03em;
-
-  --text-display-md:                  clamp(2rem, 6vw, 4.25rem);
-  --text-display-md--line-height:     1.15;
-  --text-display-md--letter-spacing:  -0.02em;
+     Note: --text-display-* live in :root below, NOT @theme. They're
+     referenced from StackedHeadline via dynamic var(--text-${size}),
+     which Tailwind's static scanner can't see — so @theme tree-shakes
+     them out. Plain :root declaration sidesteps that. */
 
   --text-h1:                  2.5rem;
   --text-h1--line-height:     1.1;
@@ -73,6 +64,23 @@
 
   /* Motion */
   --ease-out-soft: cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+
+/* Display sizes — kept out of @theme so Tailwind's static scanner
+   doesn't tree-shake them (StackedHeadline references them via a
+   runtime-built var() name that the scanner can't see). */
+:root {
+  --text-display-xl:                  clamp(4rem, 12vw, 8.5rem);
+  --text-display-xl--line-height:     0.95;
+  --text-display-xl--letter-spacing:  -0.035em;
+
+  --text-display-lg:                  clamp(3rem, 9vw, 6.375rem);
+  --text-display-lg--line-height:     0.98;
+  --text-display-lg--letter-spacing:  -0.03em;
+
+  --text-display-md:                  clamp(2rem, 6vw, 4.25rem);
+  --text-display-md--line-height:     1.15;
+  --text-display-md--letter-spacing:  -0.02em;
 }
 
 /* ----------------------------------------------------------------
