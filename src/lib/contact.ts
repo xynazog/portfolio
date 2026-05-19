@@ -29,7 +29,7 @@ export const contact: Contact = {
     location: "San Francisco Bay Area",
   },
   endpoints: {
-    email: "mailto:ankitcbhagat@gmail.com",
+    email: "mailto:hello@ankitbhagat.com",
     linkedin: "https://linkedin.com/in/xynazog",
     github: "https://github.com/xynazog",
   },
