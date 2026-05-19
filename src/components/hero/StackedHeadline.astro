@@ -1,0 +1,148 @@
+---
+/**
+ * The hero's stacked-headline pattern. Each "line" of the same idea gets
+ * a different size, weight, family, and reveal delay — creating the
+ * descending echo that Keya and Dani both lean on.
+ *
+ * Sizes reference @theme tokens directly via CSS custom properties so
+ * Tailwind doesn't need to know about the dynamic class names.
+ *
+ * Optional per-line `highlights: string[]` wraps the matched words with
+ * a hand-drawn SVG underline (accent color, scaled to font size).
+ */
+
+export interface StackedLine {
+  text: string;
+  size: "display-xl" | "display-lg" | "display-md";
+  family?: "display" | "serif";
+  weight?: number;
+  italic?: boolean;
+  color?: "fg-hi" | "fg" | "muted";
+  highlights?: string[];
+}
+
+interface Props {
+  lines: StackedLine[];
+}
+
+const { lines } = Astro.props;
+
+/**
+ * Split text into segments, marking those that match any of `highlights`
+ * (case-insensitive). Used to wrap specific words in the underline span.
+ */
+function splitWithHighlights(text: string, highlights: string[] = []) {
+  if (!highlights.length) return [{ text, highlight: false }];
+  const escaped = highlights.map((h) => h.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const re = new RegExp(`(${escaped.join("|")})`, "gi");
+  return text
+    .split(re)
+    .filter((p) => p !== "")
+    .map((p) => ({
+      text: p,
+      highlight: highlights.some((h) => h.toLowerCase() === p.toLowerCase()),
+    }));
+}
+---
+
+<h1 class="stack">
+  {lines.map((line, i) => {
+    const parts = splitWithHighlights(line.text, line.highlights);
+    return (
+      <span
+        class="stack__line"
+        style={[
+          `font-family: var(--font-${line.family ?? "display"});`,
+          `font-size: var(--text-${line.size});`,
+          `line-height: var(--text-${line.size}--line-height);`,
+          `letter-spacing: var(--text-${line.size}--letter-spacing);`,
+          `font-weight: ${line.weight ?? 500};`,
+          `font-style: ${line.italic ? "italic" : "normal"};`,
+          `color: var(--color-${line.color ?? "fg"});`,
+          `--stack-delay: ${i * 120}ms;`,
+        ].join(" ")}
+      >
+        {parts.map((p) =>
+          p.highlight ? (
+            <span class="stack__hl">
+              {p.text}
+              <svg
+                viewBox="0 0 128 22"
+                fill="none"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+                class="stack__hl-svg"
+              >
+                <path
+                  d="M 4 14 C 9 6, 16 6, 22 14 C 28 22, 34 6, 40 14 C 46 22, 52 6, 58 14 C 64 22, 70 6, 76 14 C 82 22, 88 6, 94 14 C 100 22, 106 6, 112 14 C 118 22, 122 10, 124 8"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  vector-effect="non-scaling-stroke"
+                  fill="transparent"
+                />
+              </svg>
+            </span>
+          ) : (
+            p.text
+          )
+        )}
+      </span>
+    );
+  })}
+</h1>
+
+<style>
+  .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+    margin: 0;
+    max-width: min(100%, 1100px);
+  }
+  .stack__line:nth-child(1) { max-width: 18ch; }
+  .stack__line:nth-child(2) { max-width: 26ch; }
+  .stack__line:nth-child(3) { max-width: 28ch; }
+  .stack__line {
+    display: block;
+    opacity: 0;
+    transform: translateY(24px);
+    animation: stack-in 720ms var(--ease-out-soft) forwards;
+    animation-delay: var(--stack-delay, 0ms);
+    text-wrap: balance;
+  }
+  @keyframes stack-in {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stack__line { opacity: 1; transform: none; animation: none; }
+  }
+
+  /* Highlighted word + hand-drawn wavy underline.
+     Wrapper is inline-block so the SVG can be positioned relative to the
+     word's box. The SVG inherits color via currentColor; height is set
+     in em so it scales with the surrounding font size. */
+  .stack__hl {
+    position: relative;
+    display: inline-block;
+    white-space: nowrap;
+    /* Word inherits the line's text color — emphasis comes from the
+       underline below, not a color shift. */
+  }
+  .stack__hl-svg {
+    position: absolute;
+    left: 0;
+    bottom: -0.05em;
+    width: 100%;
+    height: 0.18em;
+    pointer-events: none;
+    overflow: visible;
+  }
+  .stack__hl-svg path {
+    stroke: var(--color-accent-hi);
+    opacity: 0.95;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    /* No reveal needed — already static — but ensure nothing in the SVG animates. */
+    .stack__hl-svg path { animation: none; }
+  }
+</style>

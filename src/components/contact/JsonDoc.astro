@@ -1,0 +1,141 @@
+---
+import { contact, displayEndpoint } from "../../lib/contact";
+
+/**
+ * The signature handcrafted moment. The Contact section IS a syntax-
+ * highlighted JSON document. Each URL/email value is a real link.
+ * Companion endpoint lives at /.well-known/contact.json — same data,
+ * served as application/json.
+ *
+ * Rendered as styled lines (not <pre>) so each value can have hover
+ * affordances without fighting whitespace.
+ */
+
+const c = contact;
+---
+
+<div class="json-doc">
+  <header class="json-doc__head">
+    <span class="json-doc__path font-mono text-mono-sm">
+      ~/.well-known/contact.json
+    </span>
+    <span class="json-doc__status font-mono text-mono-sm">200 ok</span>
+  </header>
+
+  <div class="json-doc__body font-mono">
+    <div class="line"><span class="p">{`{`}</span></div>
+
+    <div class="line" style="--i: 1">
+      <span class="k">"issuer"</span><span class="p">:</span>
+      <a class="s s--link" href={c.issuer} target="_blank" rel="noreferrer">"{c.issuer}"</a><span class="p">,</span>
+    </div>
+
+    <div class="line" style="--i: 1">
+      <span class="k">"subject"</span><span class="p">: {`{`}</span>
+    </div>
+    <div class="line" style="--i: 2">
+      <span class="k">"name"</span><span class="p">:</span> <span class="s">"{c.subject.name}"</span><span class="p">,</span>
+    </div>
+    <div class="line" style="--i: 2">
+      <span class="k">"role"</span><span class="p">:</span> <span class="s">"{c.subject.role}"</span><span class="p">,</span>
+    </div>
+    <div class="line" style="--i: 2">
+      <span class="k">"location"</span><span class="p">:</span> <span class="s">"{c.subject.location}"</span>
+    </div>
+    <div class="line" style="--i: 1"><span class="p">{`},`}</span></div>
+
+    <div class="line" style="--i: 1">
+      <span class="k">"endpoints"</span><span class="p">: {`{`}</span>
+    </div>
+    <div class="line" style="--i: 2">
+      <span class="k">"email"</span><span class="p">:</span>
+      <a class="s s--link" href={c.endpoints.email}>"{displayEndpoint(c.endpoints.email)}"</a><span class="p">,</span>
+    </div>
+    <div class="line" style="--i: 2">
+      <span class="k">"linkedin"</span><span class="p">:</span>
+      <a class="s s--link" href={c.endpoints.linkedin} target="_blank" rel="noreferrer">"{c.endpoints.linkedin}"</a><span class="p">,</span>
+    </div>
+    <div class="line" style="--i: 2">
+      <span class="k">"github"</span><span class="p">:</span>
+      <a class="s s--link" href={c.endpoints.github} target="_blank" rel="noreferrer">"{c.endpoints.github}"</a>
+    </div>
+    <div class="line" style="--i: 1"><span class="p">{`},`}</span></div>
+
+    <div class="line" style="--i: 1">
+      <span class="k">"scopes_supported"</span><span class="p">:</span> <span class="p">[</span>{c.scopes_supported.map((s, i) => (
+        <><span class="s">"{s}"</span>{i < c.scopes_supported.length - 1 && <span class="p">, </span>}</>
+      ))}<span class="p">],</span>
+    </div>
+
+    <div class="line" style="--i: 1">
+      <span class="k">"audience"</span><span class="p">:</span> <span class="p">[</span>{c.audience.map((s, i) => (
+        <><span class="s">"{s}"</span>{i < c.audience.length - 1 && <span class="p">, </span>}</>
+      ))}<span class="p">],</span>
+    </div>
+
+    <div class="line" style="--i: 1">
+      <span class="k">"response_time"</span><span class="p">:</span> <span class="s">"{c.response_time}"</span>
+    </div>
+
+    <div class="line"><span class="p">{`}`}</span></div>
+  </div>
+</div>
+
+<style>
+  .json-doc {
+    background: var(--color-bg-elev);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    max-width: 60ch;
+    overflow: hidden;
+    box-shadow:
+      0 1px 0 color-mix(in oklab, white 4%, transparent) inset,
+      0 30px 60px -30px rgba(0, 0, 0, 0.6);
+  }
+  .json-doc__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+    background: color-mix(in oklab, var(--color-bg) 60%, var(--color-bg-elev));
+    color: var(--color-muted);
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+  }
+  .json-doc__path::before {
+    content: "● ";
+    color: var(--color-accent);
+  }
+  .json-doc__status {
+    color: var(--color-accent-hi);   /* 6.65:1 — passes AA at small size */
+    border: 1px solid color-mix(in oklab, var(--color-accent-hi) 35%, transparent);
+    padding: 0.05em 0.5em;
+    border-radius: 999px;
+    font-size: 0.7rem;
+  }
+  .json-doc__body {
+    padding: 1.25rem 1.25rem 1.25rem 1.25rem;
+    font-size: 0.8125rem;
+    line-height: 1.7;
+    overflow-x: auto;
+  }
+  .line {
+    padding-left: calc(var(--i, 0) * 1.4rem);
+    white-space: nowrap;
+  }
+  .k { color: var(--color-muted); }      /* keys */
+  .s { color: var(--color-fg); }          /* strings */
+  .p { color: var(--color-subtle); }      /* punctuation */
+  .s--link {
+    color: var(--color-accent-hi);   /* 6.65:1 — passes AA at body/mono size */
+    text-decoration: none;
+    border-bottom: 1px dashed color-mix(in oklab, var(--color-accent-hi) 40%, transparent);
+    transition: color 160ms var(--ease-out-soft), border-color 160ms var(--ease-out-soft);
+  }
+  .s--link:hover,
+  .s--link:focus-visible {
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
+  }
+</style>

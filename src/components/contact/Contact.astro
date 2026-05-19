@@ -1,0 +1,54 @@
+---
+import SectionHeader from "../ui/SectionHeader.astro";
+import JsonDoc from "./JsonDoc.astro";
+---
+
+<section id="say-hi" class="section contact">
+  <div class="container-page">
+    <SectionHeader id="say-hi" eyebrow="say hi" count={5} />
+
+    <p class="contact__intro font-serif">
+      Easiest by email. The JSON is the same thing, served properly.
+    </p>
+
+    <JsonDoc />
+
+    <p class="contact__endpoint font-mono text-mono-sm">
+      <a href="/.well-known/contact.json">
+        GET /.well-known/contact.json &rarr;
+      </a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .contact__intro {
+    color: var(--color-fg);
+    font-size: clamp(1.0625rem, 1.2vw, 1.25rem);
+    line-height: 1.6;
+    max-width: 50ch;
+    margin: 0 0 2.5rem;
+  }
+  .contact__intro code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--color-accent);
+    background: var(--color-bg-elev);
+    padding: 0.1em 0.4em;
+    border-radius: 3px;
+  }
+  .contact__endpoint {
+    margin-top: 1.5rem;
+    color: var(--color-muted);
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+  }
+  .contact__endpoint a {
+    color: var(--color-muted);
+    transition: color 160ms var(--ease-out-soft);
+  }
+  .contact__endpoint a:hover,
+  .contact__endpoint a:focus-visible {
+    color: var(--color-accent);
+  }
+</style>

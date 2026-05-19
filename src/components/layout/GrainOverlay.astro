@@ -1,0 +1,24 @@
+---
+/**
+ * Fixed SVG noise overlay. Almost imperceptible — the texture you only
+ * notice when you remove it. Disabled under prefers-reduced-motion.
+ */
+---
+
+<div class="grain" aria-hidden="true"></div>
+
+<style>
+  .grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: url("/grain.svg");
+    background-size: 180px 180px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .grain { display: none; }
+  }
+</style>

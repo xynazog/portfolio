@@ -1,0 +1,119 @@
+---
+/**
+ * Minimal top nav. Left: name. Right: 3 anchor links.
+ * Sticky with a subtle backdrop that fades in once you scroll past 64px.
+ * The accent underline reveals on hover/focus — the only animated decoration.
+ */
+
+interface NavLink {
+  label: string;
+  href: string;
+}
+
+const links: NavLink[] = [
+  { label: "work",   href: "/#work" },
+  { label: "now",    href: "/#now" },
+  { label: "say hi", href: "/#say-hi" },
+];
+---
+
+<header class="nav" data-nav>
+  <div class="nav__inner container-page">
+    <a class="nav__brand font-mono text-mono-sm" href="/">
+      <span class="nav__brand-dot" aria-hidden="true"></span>
+      ankit bhagat
+    </a>
+
+    <nav aria-label="primary">
+      <ul class="nav__list">
+        {links.map((l) => (
+          <li>
+            <a class="nav__link font-mono text-mono-sm" href={l.href}>
+              {l.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    transition: backdrop-filter 220ms var(--ease-out-soft),
+                background-color 220ms var(--ease-out-soft),
+                border-color 220ms var(--ease-out-soft);
+    border-bottom: 1px solid transparent;
+  }
+  .nav[data-scrolled="true"] {
+    background: color-mix(in oklab, var(--color-bg) 78%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom-color: var(--color-border);
+  }
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  .nav__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-fg);
+    text-transform: lowercase;
+    letter-spacing: 0.02em;
+  }
+  .nav__brand-dot {
+    width: 6px; height: 6px;
+    border-radius: 1px;
+    background: var(--color-accent);
+    display: inline-block;
+  }
+  .nav__list {
+    list-style: none;
+    display: flex;
+    gap: clamp(1.25rem, 3vw, 2.25rem);
+    margin: 0; padding: 0;
+  }
+  .nav__link {
+    color: var(--color-muted);
+    text-transform: lowercase;
+    position: relative;
+    transition: color 160ms var(--ease-out-soft);
+  }
+  .nav__link::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    bottom: -4px;
+    height: 1px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 220ms var(--ease-out-soft);
+  }
+  .nav__link:hover,
+  .nav__link:focus-visible { color: var(--color-fg); }
+  .nav__link:hover::after,
+  .nav__link:focus-visible::after { transform: scaleX(1); }
+</style>
+
+<script>
+  // Toggle a scrolled state once the user has moved past 64px.
+  // Tiny island — no framework. Reattaches after View Transitions nav.
+  function attachNavScroll() {
+    const nav = document.querySelector<HTMLElement>("[data-nav]");
+    if (!nav) return;
+    const update = () => {
+      nav.dataset.scrolled = window.scrollY > 64 ? "true" : "false";
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+  }
+  attachNavScroll();
+  document.addEventListener("astro:after-swap", attachNavScroll);
+</script>

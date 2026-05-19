@@ -1,0 +1,45 @@
+---
+/**
+ * Consistent eyebrow for each section. Mono, lowercase, muted.
+ * Section IDs (locked in CLAUDE.md): work / where-ive-been / now / say-hi.
+ */
+
+interface Props {
+  id?: string;
+  eyebrow: string;
+  count?: number;          // optional numeric prefix, e.g. 02
+}
+
+const { id, eyebrow, count } = Astro.props;
+---
+
+<header class="section-header" id={id}>
+  {count !== undefined && (
+    <span class="section-header__count font-mono text-mono-sm">
+      {String(count).padStart(2, "0")}
+    </span>
+  )}
+  <h2 class="section-header__eyebrow font-mono text-mono-sm">
+    {eyebrow}
+  </h2>
+</header>
+
+<style>
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+    color: var(--color-muted);
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+  }
+  .section-header__count {
+    color: var(--color-subtle);
+  }
+  .section-header__eyebrow {
+    color: var(--color-muted);
+    font-weight: 500;
+    margin: 0;
+  }
+</style>

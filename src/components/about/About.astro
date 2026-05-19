@@ -1,0 +1,157 @@
+---
+import SectionHeader from "../ui/SectionHeader.astro";
+
+/**
+ * About — two-column at desktop: prose left, factual sidebar right.
+ *
+ * Prose is placeholder until content/portfolio.md lands. Sidebar uses
+ * biographical facts from the brief (Splunk / EM / identity platform).
+ * Mark placeholder lines with [PLACEHOLDER] so a Cmd-F sweep reveals
+ * everything that still needs Ankit's words.
+ */
+---
+
+<section id="about" class="section about">
+  <div class="container-page">
+    <SectionHeader id="about" eyebrow="brief background" count={1} />
+
+    <div class="about__grid">
+      <div class="about__prose">
+        <p class="scroll-reveal-text">
+          I'm an Engineering Manager at
+          <svg class="inline-mark" viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="M7 4 L17 12 L7 20"
+              stroke="#65A637"
+              stroke-width="3.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              fill="none"
+            />
+          </svg>Splunk, leading the team that owns identity, access, and
+          integrations for Splunk Observability Cloud. I've been at Splunk
+          seven years across IC and EM roles &mdash; long enough to ship
+          Unified Identity end-to-end, build a custom RBAC system from
+          scratch, and promote four engineers along the way.
+        </p>
+        <p class="scroll-reveal-text">
+          Outside of work: roughly 6,000 hours of
+          <svg class="inline-mark" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="3" fill="#0E0F0F"/>
+            <path
+              d="M7 17 L12 6 L17 17 Z M9.4 13.4 H14.6"
+              stroke="#C70206"
+              stroke-width="1.6"
+              stroke-linejoin="round"
+              fill="none"
+            />
+          </svg>Dota 2 across the years, 100,000+
+          <svg class="inline-mark" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="11" fill="#1DB954"/>
+            <path d="M6.2 14.6 Q12 12 17.8 14.6"  stroke="#0E0F0F" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+            <path d="M7.2 11.6 Q12 9.4 16.8 11.6" stroke="#0E0F0F" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+            <path d="M8.2 8.8  Q12 7   15.8 8.8"  stroke="#0E0F0F" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          </svg>Spotify minutes a year, ten-plus
+          <span class="inline-mark inline-mark--emoji" aria-hidden="true">🎸</span>concerts
+          when the calendar allows, and an
+          <svg class="inline-mark" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="10.4" stroke="#FA114F" stroke-width="2.4" fill="none"/>
+            <circle cx="12" cy="12" r="7.0"  stroke="#92E82A" stroke-width="2.4" fill="none"/>
+            <circle cx="12" cy="12" r="3.6"  stroke="#1EEAEF" stroke-width="2.4" fill="none"/>
+          </svg>Apple Watch I'm forever trying to close out before midnight.
+        </p>
+        <p class="scroll-reveal-text">
+          The throughline, if there is one, is that I keep ending up at the
+          seam between platforms &mdash; wiring things together that weren't
+          designed to talk to each other, then figuring out who's allowed to
+          do what once they can.
+        </p>
+      </div>
+
+      <aside class="about__sidebar" aria-label="quick facts">
+        <dl class="about__facts">
+          <div>
+            <dt class="font-mono text-mono-sm">based in</dt>
+            <dd>San Francisco Bay Area</dd>
+          </div>
+          <div>
+            <dt class="font-mono text-mono-sm">currently</dt>
+            <dd>Engineering Manager · Splunk</dd>
+          </div>
+          <div>
+            <dt class="font-mono text-mono-sm">scope</dt>
+            <dd>AI, Identity, Integrations</dd>
+          </div>
+          <div>
+            <dt class="font-mono text-mono-sm">open to</dt>
+            <dd>EM · PM · Staff Eng at AI labs &amp; product cos</dd>
+          </div>
+        </dl>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+  }
+  @media (min-width: 880px) {
+    .about__grid {
+      grid-template-columns: minmax(0, 1.6fr) minmax(220px, 1fr);
+    }
+  }
+  .about__prose {
+    max-width: 60ch;
+    color: var(--color-fg);
+  }
+  .about__prose p {
+    font-family: var(--font-serif);
+    font-size: clamp(1.0625rem, 1.2vw, 1.25rem);
+    line-height: 1.65;
+    margin: 0 0 1.4em 0;
+  }
+  .about__prose code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--color-accent);
+    background: var(--color-bg-elev);
+    padding: 0.1em 0.4em;
+    border-radius: 3px;
+  }
+  .about__sidebar {
+    border-left: 1px solid var(--color-border);
+    padding-left: clamp(1.25rem, 2.5vw, 2rem);
+  }
+  @media (max-width: 880px) {
+    .about__sidebar {
+      border-left: none;
+      border-top: 1px solid var(--color-border);
+      padding-left: 0;
+      padding-top: clamp(1.5rem, 3vw, 2rem);
+    }
+  }
+  .about__facts {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+    margin: 0;
+  }
+  .about__facts > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .about__facts dt {
+    color: var(--color-muted);
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+  }
+  .about__facts dd {
+    color: var(--color-fg);
+    font-family: var(--font-serif);
+    margin: 0;
+  }
+</style>

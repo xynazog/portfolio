@@ -1,0 +1,31 @@
+---
+/**
+ * Quiet closing line above the footer. Two parallel clauses — italic
+ * serif throughout for cadence.
+ */
+---
+
+<section class="closing" aria-label="closing line">
+  <div class="container-page">
+    <p class="closing__line font-serif scroll-reveal-text">
+      A platform without a product is a hobby. <br />
+      A product without a platform is a demo.
+    </p>
+  </div>
+</section>
+
+<style>
+  .closing {
+    padding-block: clamp(4rem, 7vw, 6rem);
+  }
+  .closing__line {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: var(--color-fg);
+    margin: 0;
+  }
+  .closing__line br { display: block; content: ""; margin-top: 0.1em; }
+</style>

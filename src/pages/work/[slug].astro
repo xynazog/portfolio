@@ -1,0 +1,200 @@
+---
+import Base from "../../layouts/Base.astro";
+
+/**
+ * v0 case-study route. Three placeholder slugs from WorkList.
+ * Each renders a "coming soon" stub with the same shape as the future
+ * real case study (problem / led / shipped / learned).
+ *
+ * In iterate phase: switch to Astro Content Collections, glob
+ * content/work/*.md, and build the prose layout properly.
+ */
+
+export function getStaticPaths() {
+  return [
+    {
+      params: { slug: "splunk-identity" },
+      props: {
+        context: "Splunk",
+        dateRange: "2022 — present",
+        title: "[PLACEHOLDER] Rebuilding identity for an enterprise platform",
+      },
+    },
+    {
+      params: { slug: "splunk-tbd" },
+      props: {
+        context: "Splunk",
+        dateRange: "2020 — 2022",
+        title: "[PLACEHOLDER] Second case study title",
+      },
+    },
+    {
+      params: { slug: "earlier-role" },
+      props: {
+        context: "Earlier role",
+        dateRange: "2018 — 2020",
+        title: "[PLACEHOLDER] Pre-Splunk case study title",
+      },
+    },
+  ];
+}
+
+interface Props {
+  context: string;
+  dateRange: string;
+  title: string;
+}
+
+const { context, dateRange, title } = Astro.props;
+---
+
+<Base title={`${title} — Ankit Bhagat`}>
+  <article class="container-page section case-study">
+    <a class="case-study__back font-mono text-mono-sm" href="/#work">
+      &larr; back to selected work
+    </a>
+
+    <header class="case-study__header">
+      <p class="font-mono text-mono-sm case-study__meta">
+        {context} — {dateRange}
+      </p>
+      <h1 class="case-study__title font-display">{title}</h1>
+    </header>
+
+    <div class="case-study__grid">
+      <aside class="case-study__rail">
+        <dl class="case-study__facts">
+          <div>
+            <dt class="font-mono text-mono-sm">role</dt>
+            <dd>[placeholder]</dd>
+          </div>
+          <div>
+            <dt class="font-mono text-mono-sm">scope</dt>
+            <dd>[placeholder]</dd>
+          </div>
+          <div>
+            <dt class="font-mono text-mono-sm">team</dt>
+            <dd>[placeholder]</dd>
+          </div>
+          <div>
+            <dt class="font-mono text-mono-sm">stack</dt>
+            <dd>[placeholder]</dd>
+          </div>
+        </dl>
+      </aside>
+
+      <div class="case-study__prose">
+        <section>
+          <h2>The problem</h2>
+          <p>[PLACEHOLDER] What was broken or unknown when you walked in.</p>
+        </section>
+        <section>
+          <h2>What I led</h2>
+          <p>[PLACEHOLDER] Your specific contribution. First person plural is fine when accurate, but be honest about the boundary between "we" and "I".</p>
+        </section>
+        <section>
+          <h2>What we shipped</h2>
+          <p>[PLACEHOLDER] Concrete outcomes. Numbers where you have them. Screenshots, diagrams, demo recordings where they exist.</p>
+        </section>
+        <section>
+          <h2>What I'd do differently</h2>
+          <p>[PLACEHOLDER] One paragraph of earned wisdom. This is the line that hiring managers screenshot.</p>
+        </section>
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .case-study__back {
+    display: inline-block;
+    color: var(--color-muted);
+    margin-bottom: 2.5rem;
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+  }
+  .case-study__back:hover,
+  .case-study__back:focus-visible { color: var(--color-accent); }
+
+  .case-study__header {
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    max-width: 30ch;
+  }
+  .case-study__meta {
+    color: var(--color-muted);
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.75rem;
+  }
+  .case-study__title {
+    font-size: clamp(2rem, 5vw, 3.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    font-weight: 540;
+    color: var(--color-fg-hi);
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .case-study__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(2rem, 4vw, 3.5rem);
+  }
+  @media (min-width: 880px) {
+    .case-study__grid {
+      grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+    }
+  }
+
+  .case-study__rail {
+    border-left: 1px solid var(--color-border);
+    padding-left: clamp(1rem, 2vw, 1.5rem);
+    align-self: start;
+    position: sticky;
+    top: 96px;
+  }
+  @media (max-width: 880px) {
+    .case-study__rail {
+      border-left: none;
+      border-top: 1px solid var(--color-border);
+      padding-left: 0;
+      padding-top: 1.25rem;
+      position: static;
+    }
+  }
+  .case-study__facts {
+    display: grid;
+    gap: 1.25rem;
+    margin: 0;
+  }
+  .case-study__facts > div { display: flex; flex-direction: column; gap: 0.2rem; }
+  .case-study__facts dt {
+    color: var(--color-muted);
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+  }
+  .case-study__facts dd {
+    color: var(--color-fg);
+    font-family: var(--font-serif);
+    margin: 0;
+  }
+
+  .case-study__prose section { margin-bottom: clamp(2.25rem, 4vw, 3.5rem); }
+  .case-study__prose h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.375rem, 2vw, 1.625rem);
+    font-weight: 540;
+    letter-spacing: -0.01em;
+    color: var(--color-fg-hi);
+    margin: 0 0 1rem;
+  }
+  .case-study__prose p {
+    font-family: var(--font-serif);
+    font-size: clamp(1.0625rem, 1.2vw, 1.125rem);
+    line-height: 1.65;
+    max-width: 60ch;
+    margin: 0;
+    color: var(--color-fg);
+  }
+</style>

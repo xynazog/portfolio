@@ -1,0 +1,136 @@
+---
+import StackedHeadline, { type StackedLine } from "./StackedHeadline.astro";
+
+/**
+ * Hero — the page's first impression. No section header (the display type
+ * IS the header). Stacked-headline pattern from PLAN.md.
+ *
+ * The fixed copy from the brief:
+ *   "Engineering leader. I build the platforms other engineers depend on —
+ *    identity, observability, and the AI tooling that's about to become both."
+ *
+ * Broken across three visual lines with descending size/weight. Line 3
+ * shifts to serif italic for a single editorial moment.
+ */
+
+const lines: StackedLine[] = [
+  {
+    text: "Engineering leader.",
+    size: "display-xl",
+    family: "display",
+    weight: 600,
+    color: "fg-hi",
+  },
+  {
+    text: "I build the platforms and products that other engineers depend on —",
+    size: "display-lg",
+    family: "display",
+    weight: 420,
+    color: "fg",
+    highlights: ["platforms", "products"],
+  },
+  {
+    text: "identity, observability, and the AI tooling that's about to become both.",
+    size: "display-md",
+    family: "serif",
+    weight: 400,
+    italic: true,
+    color: "fg",
+  },
+];
+---
+
+<section class="hero">
+  <div class="container-page hero__inner">
+    <p
+      class="hero__eyebrow font-mono text-mono-sm"
+      style="--stack-delay: 0ms"
+    >
+      <span class="hero__dot" aria-hidden="true"></span>
+      engineering manager · identity · AI-first
+    </p>
+
+    <StackedHeadline lines={lines} />
+
+    <p class="hero__location-trail font-mono text-mono-sm" style="--stack-delay: 520ms">
+      <span class="hero__trail-prefix">↓</span>
+      <span>more below</span>
+    </p>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-top: clamp(4rem, 8vw, 7rem);
+    padding-bottom: clamp(5rem, 10vw, 9rem);
+    position: relative;
+  }
+  .hero__inner {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+  }
+  .hero__eyebrow {
+    color: var(--color-muted);
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    opacity: 0;
+    animation: hero-eyebrow-in 600ms var(--ease-out-soft) forwards;
+    animation-delay: 60ms;
+  }
+  .hero__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow:
+      0 0 0 4px color-mix(in oklab, var(--color-accent) 12%, transparent);
+    display: inline-block;
+    /* Soft radar ping — gentle, branded. Loops every 2.4s. */
+    animation: hero-dot-pulse 2.4s ease-out infinite;
+  }
+  @keyframes hero-dot-pulse {
+    0% {
+      box-shadow:
+        0 0 0 4px  color-mix(in oklab, var(--color-accent) 12%, transparent),
+        0 0 0 4px  color-mix(in oklab, var(--color-accent) 45%, transparent);
+    }
+    70% {
+      box-shadow:
+        0 0 0 4px  color-mix(in oklab, var(--color-accent) 12%, transparent),
+        0 0 0 14px color-mix(in oklab, var(--color-accent) 0%,  transparent);
+    }
+    100% {
+      box-shadow:
+        0 0 0 4px  color-mix(in oklab, var(--color-accent) 12%, transparent),
+        0 0 0 14px color-mix(in oklab, var(--color-accent) 0%,  transparent);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__dot { animation: none; }
+  }
+  .hero__location-trail {
+    color: var(--color-subtle);
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: clamp(2rem, 4vw, 3rem);
+    opacity: 0;
+    animation: hero-eyebrow-in 600ms var(--ease-out-soft) forwards;
+    animation-delay: 520ms;
+  }
+  .hero__trail-prefix {
+    color: var(--color-muted);
+  }
+  @keyframes hero-eyebrow-in {
+    to { opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__eyebrow, .hero__location-trail { opacity: 1; animation: none; }
+  }
+</style>

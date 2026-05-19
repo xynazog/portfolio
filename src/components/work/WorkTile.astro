@@ -1,0 +1,122 @@
+---
+/**
+ * Single project tile, Emmi's metadata grammar:
+ *   [context] — [date]
+ *   Title
+ *   One-line description
+ *
+ * Entire tile is the link target. Hover lifts to bg-elev and reveals
+ * the accent underline under the title.
+ */
+
+interface Props {
+  href: string;
+  context: string;
+  dateRange: string;
+  title: string;
+  summary: string;
+  status?: "shipped" | "draft";
+}
+
+const {
+  href,
+  context,
+  dateRange,
+  title,
+  summary,
+  status = "shipped",
+} = Astro.props;
+---
+
+<a class="tile" href={href} data-status={status}>
+  <div class="tile__meta">
+    <span class="font-mono text-mono-sm tile__meta-text">
+      {context} — {dateRange}
+    </span>
+    {status === "draft" && (
+      <span class="tile__draft-badge font-mono text-mono-sm">
+        case study coming soon
+      </span>
+    )}
+  </div>
+  <h3 class="tile__title font-display">
+    {title}
+  </h3>
+  <p class="tile__summary font-serif">
+    {summary}
+  </p>
+  <span class="tile__arrow font-mono text-mono-sm" aria-hidden="true">
+    read &rarr;
+  </span>
+</a>
+
+<style>
+  .tile {
+    display: grid;
+    grid-template-rows: auto auto auto auto;
+    gap: 0.5rem;
+    padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1.25rem, 2.5vw, 2rem);
+    border-top: 1px solid var(--color-border);
+    transition:
+      background-color 240ms var(--ease-out-soft),
+      padding-left 240ms var(--ease-out-soft);
+    position: relative;
+  }
+  .tile:last-child { border-bottom: 1px solid var(--color-border); }
+  .tile:hover,
+  .tile:focus-visible {
+    background: var(--color-bg-elev);
+    padding-left: clamp(1.75rem, 3vw, 2.5rem);
+  }
+  .tile__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--color-muted);
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+  }
+  .tile__draft-badge {
+    color: var(--color-accent);
+    border: 1px solid color-mix(in oklab, var(--color-accent) 30%, transparent);
+    padding: 0.1em 0.5em;
+    border-radius: 999px;
+  }
+  .tile__title {
+    font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-weight: 540;
+    color: var(--color-fg-hi);
+    margin: 0.15em 0 0;
+    text-wrap: balance;
+    max-width: 24ch;
+  }
+  .tile[data-status="draft"] .tile__title { color: var(--color-fg); }
+  .tile__summary {
+    color: var(--color-fg);
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 60ch;
+  }
+  .tile__arrow {
+    color: var(--color-muted);
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 220ms var(--ease-out-soft), transform 220ms var(--ease-out-soft), color 220ms var(--ease-out-soft);
+    margin-top: 0.25rem;
+  }
+  .tile:hover .tile__arrow,
+  .tile:focus-visible .tile__arrow {
+    opacity: 1;
+    transform: translateX(0);
+    color: var(--color-accent);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tile, .tile__arrow { transition: none; }
+  }
+</style>
