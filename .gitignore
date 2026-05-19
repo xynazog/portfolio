@@ -23,3 +23,8 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 .gstack/
+
+# private collaboration notes — not for the public repo
+CLAUDE.md
+PLAN.md
+INSPIRATIONS.md
