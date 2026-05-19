@@ -19,7 +19,10 @@ const c = contact;
     <span class="json-doc__path font-mono text-mono-sm">
       ~/.well-known/contact.json
     </span>
-    <span class="json-doc__status font-mono text-mono-sm">200 ok</span>
+    <span class="json-doc__status font-mono text-mono-sm">
+      <span class="json-doc__status-dot" aria-hidden="true"></span>
+      200 ok
+    </span>
   </header>
 
   <div class="json-doc__body font-mono">
@@ -114,9 +117,29 @@ const c = contact;
   .json-doc__status {
     color: var(--color-accent-hi);   /* 6.65:1 — passes AA at small size */
     border: 1px solid color-mix(in oklab, var(--color-accent-hi) 35%, transparent);
-    padding: 0.05em 0.5em;
+    padding: 0.05em 0.6em;
     border-radius: 999px;
     font-size: 0.7rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+  }
+  /* Live-status idiom — true signal green, intentionally outside the warm
+     palette because the green=alive convention is universal. The ripple is
+     a single box-shadow expanding outward, restarted every cycle. */
+  .json-doc__status-dot {
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55);
+    animation: status-dot-pulse 1.8s var(--ease-out-soft) infinite;
+    flex-shrink: 0;
+  }
+  @keyframes status-dot-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+    70%  { box-shadow: 0 0 0 7px rgba(34, 197, 94, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
   }
   .json-doc__body {
     padding: 1.25rem 1.25rem 1.25rem 1.25rem;
@@ -142,4 +165,120 @@ const c = contact;
     color: var(--color-accent);
     border-bottom-color: var(--color-accent);
   }
+
+  /* Typewriter reveal — chars wrapped in .tw spans by JS before the
+     animation runs. Default: visible (so no-JS users and post-animation
+     state both render normally). While [data-typing] is set on the body,
+     un-revealed chars are hidden — layout is preserved because the
+     spans still occupy their box. */
+  .tw {
+    opacity: 1;
+    transition: opacity 80ms var(--ease-out-soft);
+  }
+  .json-doc__body[data-typing="true"] .tw { opacity: 0; }
+  .json-doc__body[data-typing="true"] .tw.tw--shown { opacity: 1; }
 </style>
+
+<script>
+  // Typewriter: reveal the JSON body character-by-character the first
+  // time it scrolls into the viewport. Wraps each char in a span ONCE
+  // (no per-tick DOM rewrite), then toggles a class per char. Honours
+  // prefers-reduced-motion and sessionStorage (first-impression only).
+  // Reattaches after Astro View Transitions navigation.
+
+  const SESSION_KEY = "contact-typewriter-played";
+  const TOTAL_MS = 1800;
+
+  function collectTextNodes(node: Node, out: Text[]) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      out.push(node as Text);
+      return;
+    }
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      node.childNodes.forEach((c) => collectTextNodes(c, out));
+    }
+  }
+
+  function wrapTextNode(textNode: Text, accum: HTMLSpanElement[]) {
+    const raw = textNode.nodeValue ?? "";
+    if (!raw) return;
+    // Mimic CSS whitespace collapsing so we don't render literal indentation.
+    const whitespaceOnly = /^\s+$/.test(raw);
+    let text = raw;
+    if (whitespaceOnly) {
+      const hasPrev = textNode.previousSibling !== null;
+      const hasNext = textNode.nextSibling !== null;
+      if (!hasPrev || !hasNext) {
+        textNode.remove();
+        return;
+      }
+      text = " ";
+    } else {
+      text = raw.replace(/\s+/g, " ");
+    }
+    const frag = document.createDocumentFragment();
+    for (const ch of text) {
+      const span = document.createElement("span");
+      span.className = "tw";
+      span.textContent = ch;
+      frag.appendChild(span);
+      accum.push(span);
+    }
+    textNode.parentNode!.replaceChild(frag, textNode);
+  }
+
+  function animate(chars: HTMLSpanElement[], body: HTMLElement) {
+    sessionStorage.setItem(SESSION_KEY, "true");
+    const total = chars.length;
+    if (total === 0) {
+      body.removeAttribute("data-typing");
+      return;
+    }
+    const baseInterval = TOTAL_MS / total;
+    let i = 0;
+    const tick = () => {
+      if (i >= total) {
+        body.removeAttribute("data-typing");
+        return;
+      }
+      chars[i].classList.add("tw--shown");
+      i++;
+      const jitter = Math.random() * 20 - 10; // ±10ms
+      const delay = Math.max(1, baseInterval + jitter);
+      setTimeout(tick, delay);
+    };
+    tick();
+  }
+
+  function setupTypewriter() {
+    const body = document.querySelector<HTMLElement>(".json-doc__body");
+    if (!body || body.dataset.twInit === "true") return;
+    body.dataset.twInit = "true";
+
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const played = sessionStorage.getItem(SESSION_KEY) === "true";
+    if (reduce || played) return; // render normally — no wrap, no animation
+
+    const textNodes: Text[] = [];
+    collectTextNodes(body, textNodes);
+    const chars: HTMLSpanElement[] = [];
+    textNodes.forEach((t) => wrapTextNode(t, chars));
+    if (chars.length === 0) return;
+
+    body.setAttribute("data-typing", "true");
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          animate(chars, body);
+        }
+      },
+      { threshold: 0.4 }
+    );
+    io.observe(body);
+  }
+
+  setupTypewriter();
+  document.addEventListener("astro:after-swap", setupTypewriter);
+</script>
