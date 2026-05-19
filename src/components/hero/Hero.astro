@@ -1,41 +1,21 @@
 ---
 import StackedHeadline, { type StackedLine } from "./StackedHeadline.astro";
 
-/**
- * Hero — the page's first impression. No section header (the display type
- * IS the header). Stacked-headline pattern from PLAN.md.
- *
- * The fixed copy from the brief:
- *   "Engineering leader. I build the platforms other engineers depend on —
- *    identity, observability, and the AI tooling that's about to become both."
- *
- * Broken across three visual lines with descending size/weight. Line 3
- * shifts to serif italic for a single editorial moment.
- */
-
 const lines: StackedLine[] = [
   {
-    text: "Engineering leader.",
+    text: "I lead the team building",
     size: "display-xl",
     family: "display",
     weight: 600,
     color: "fg-hi",
   },
   {
-    text: "I build the platforms and products that other engineers depend on —",
+    text: "the platforms and products other engineers depend on.",
     size: "display-lg",
     family: "display",
     weight: 420,
     color: "fg",
     highlights: ["platforms", "products"],
-  },
-  {
-    text: "identity, observability, and the AI tooling that's about to become both.",
-    size: "display-md",
-    family: "serif",
-    weight: 400,
-    italic: true,
-    color: "fg",
   },
 ];
 ---

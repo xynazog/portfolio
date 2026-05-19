@@ -15,6 +15,7 @@ export interface Contact {
     email: string;
     linkedin: string;
     github: string;
+    x: string;
   };
   scopes_supported: string[];
   audience: string[];
@@ -32,6 +33,7 @@ export const contact: Contact = {
     email: "mailto:hello@ankitbhagat.com",
     linkedin: "https://linkedin.com/in/xynazog",
     github: "https://github.com/xynazog",
+    x: "https://x.com/xynazog",
   },
   scopes_supported: ["EM", "PM", "Staff Eng"],
   audience: ["AI labs", "product companies"],
