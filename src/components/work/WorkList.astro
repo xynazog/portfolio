@@ -1,51 +1,7 @@
 ---
 import SectionHeader from "../ui/SectionHeader.astro";
 import WorkTile from "./WorkTile.astro";
-
-/**
- * Three placeholder tiles for v0. Replace with real case study slugs
- * once Ankit writes copy. Stays as a tight single column — not a card
- * grid. Tactile reading order.
- */
-
-interface TileData {
-  slug: string;
-  context: string;
-  dateRange: string;
-  title: string;
-  summary: string;
-  status: "shipped" | "draft";
-}
-
-const tiles: TileData[] = [
-  {
-    slug: "splunk-identity",
-    context: "Splunk",
-    dateRange: "2022 — present",
-    title: "[PLACEHOLDER] Rebuilding identity for an enterprise platform",
-    summary:
-      "[PLACEHOLDER] One-line description. The arc: what was broken, what I led, what shipped, what I learned. Replace via content/work/splunk-identity.md.",
-    status: "draft",
-  },
-  {
-    slug: "splunk-tbd",
-    context: "Splunk",
-    dateRange: "2020 — 2022",
-    title: "[PLACEHOLDER] Second case study title",
-    summary:
-      "[PLACEHOLDER] What you led before identity. Same arc. Replace via content/work/splunk-tbd.md.",
-    status: "draft",
-  },
-  {
-    slug: "earlier-role",
-    context: "Earlier role",
-    dateRange: "2018 — 2020",
-    title: "[PLACEHOLDER] Pre-Splunk case study title",
-    summary:
-      "[PLACEHOLDER] The before-Splunk story — first formative thing you owned. Replace via content/work/earlier-role.md.",
-    status: "draft",
-  },
-];
+import { caseStudies } from "../../lib/work";
 ---
 
 <section id="work" class="section work">
@@ -53,14 +9,13 @@ const tiles: TileData[] = [
     <SectionHeader id="work" eyebrow="a few things worth talking about" count={2} />
 
     <div class="work__list">
-      {tiles.map((t) => (
+      {caseStudies.map((c) => (
         <WorkTile
-          href={`/work/${t.slug}`}
-          context={t.context}
-          dateRange={t.dateRange}
-          title={t.title}
-          summary={t.summary}
-          status={t.status}
+          href={`/work/${c.slug}`}
+          context={c.context}
+          dateRange={c.dateRange}
+          title={c.title}
+          summary={c.summary}
         />
       ))}
     </div>
