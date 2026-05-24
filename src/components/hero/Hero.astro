@@ -32,7 +32,33 @@ const lines: StackedLine[] = [
 
     <StackedHeadline lines={lines} />
 
-    <p class="hero__location-trail font-mono text-mono-sm" style="--stack-delay: 520ms">
+    <div class="hero__ctas" style="--stack-delay: 360ms">
+      <a class="hero__cta hero__cta--primary font-mono text-mono-sm" href="#work">
+        view work
+      </a>
+      <a
+        class="hero__cta font-mono text-mono-sm"
+        href="/resume.pdf"
+        target="_blank"
+        rel="noopener"
+      >
+        download resume <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+
+    {/* Impact strip — each stat sourced from a case study in src/lib/work.ts.
+        Update both places intentionally when the underlying numbers shift. */}
+    <p class="hero__impact font-mono text-mono-sm" style="--stack-delay: 440ms">
+      <span>7 yrs at splunk</span>
+      <span aria-hidden="true" class="hero__impact-sep">·</span>
+      <span>10 engineers led</span>
+      <span aria-hidden="true" class="hero__impact-sep">·</span>
+      <span>$159M+ TCV influenced</span>
+      <span aria-hidden="true" class="hero__impact-sep">·</span>
+      <span>60% query latency cut</span>
+    </p>
+
+    <p class="hero__location-trail font-mono text-mono-sm" style="--stack-delay: 600ms">
       <span class="hero__trail-prefix">↓</span>
       <span>more below</span>
     </p>
@@ -92,6 +118,62 @@ const lines: StackedLine[] = [
   @media (prefers-reduced-motion: reduce) {
     .hero__dot { animation: none; }
   }
+  .hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    margin-top: clamp(1.25rem, 2.5vw, 2rem);
+    opacity: 0;
+    animation: hero-eyebrow-in 600ms var(--ease-out-soft) forwards;
+    animation-delay: var(--stack-delay, 360ms);
+  }
+  .hero__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.7rem 1.1rem;
+    border: 1px solid var(--color-border);
+    color: var(--color-fg);
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+    border-radius: 2px;
+    transition:
+      background-color 200ms var(--ease-out-soft),
+      border-color 200ms var(--ease-out-soft),
+      color 200ms var(--ease-out-soft);
+  }
+  .hero__cta:hover,
+  .hero__cta:focus-visible {
+    background: var(--color-bg-elev);
+    border-color: var(--color-muted);
+  }
+  .hero__cta--primary {
+    border-color: var(--color-accent);
+    color: var(--color-fg-hi);
+  }
+  .hero__cta--primary:hover,
+  .hero__cta--primary:focus-visible {
+    background: color-mix(in oklab, var(--color-accent) 14%, transparent);
+    border-color: var(--color-accent-hi);
+  }
+
+  .hero__impact {
+    color: var(--color-muted);
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.65rem;
+    margin: 0;
+    opacity: 0;
+    animation: hero-eyebrow-in 600ms var(--ease-out-soft) forwards;
+    animation-delay: var(--stack-delay, 440ms);
+  }
+  .hero__impact-sep {
+    color: var(--color-subtle);
+  }
+
   .hero__location-trail {
     color: var(--color-subtle);
     text-transform: lowercase;
@@ -99,10 +181,13 @@ const lines: StackedLine[] = [
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    margin-top: clamp(2rem, 4vw, 3rem);
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
     opacity: 0;
     animation: hero-eyebrow-in 600ms var(--ease-out-soft) forwards;
-    animation-delay: 520ms;
+    animation-delay: var(--stack-delay, 600ms);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__ctas, .hero__impact { opacity: 1; animation: none; }
   }
   .hero__trail-prefix {
     color: var(--color-muted);

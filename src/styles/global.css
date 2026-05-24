@@ -172,6 +172,24 @@ button, [role="button"], a[href] { cursor: pointer; }
 }
 
 /* ----------------------------------------------------------------
+ * Stack chip — small mono pill used on work tiles and case-study rails.
+ * No fill, subtle border, lowercase. Matches the rest of the minimal kit.
+ * ---------------------------------------------------------------- */
+
+.stack-chip {
+  display: inline-block;
+  font-size: 0.7rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+  border: 1px solid var(--color-border);
+  padding: 0.35em 0.65em;
+  border-radius: 2px;
+  text-transform: lowercase;
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------------
  * Reveal-on-scroll (one-shot) — opt-in via [data-reveal]
  * ---------------------------------------------------------------- */
 
@@ -232,4 +250,68 @@ button, [role="button"], a[href] { cursor: pointer; }
     opacity: 1;
     transform: none;
   }
+}
+
+/* ----------------------------------------------------------------
+ * Print — recruiters and hiring managers occasionally save case
+ * studies to PDF. Switch to ink-friendly colors, hide chrome,
+ * force any scroll-reveal content visible so pages aren't blank.
+ * ---------------------------------------------------------------- */
+
+@media print {
+  html, body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  body { background-image: none !important; }
+
+  .nav,
+  .grain,
+  .case-study__back,
+  .hero__ctas,
+  .hero__impact,
+  .hero__location-trail,
+  footer {
+    display: none !important;
+  }
+
+  [data-reveal],
+  .scroll-reveal-text {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  .case-study__rail {
+    position: static !important;
+    border-left: none !important;
+    border-top: 1px solid #999 !important;
+    padding-left: 0 !important;
+    padding-top: 1rem !important;
+  }
+
+  .case-study__title,
+  .case-study__prose h2 {
+    color: #000 !important;
+  }
+
+  .case-study__prose p,
+  .case-study__prose li,
+  .case-study__facts dd {
+    color: #111 !important;
+    font-size: 11pt !important;
+    max-width: 100% !important;
+  }
+
+  .stack-chip {
+    color: #333 !important;
+    border-color: #999 !important;
+  }
+
+  a {
+    color: #000 !important;
+    text-decoration: underline;
+  }
+
+  .section { padding-block: 1rem !important; }
 }

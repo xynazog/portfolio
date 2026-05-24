@@ -15,6 +15,7 @@ interface Props {
   dateRange: string;
   title: string;
   summary: string;
+  stack?: string;
   status?: "shipped" | "draft";
 }
 
@@ -24,8 +25,13 @@ const {
   dateRange,
   title,
   summary,
+  stack,
   status = "shipped",
 } = Astro.props;
+
+const stackTags = stack
+  ? stack.split(",").map((s) => s.trim()).filter(Boolean)
+  : [];
 ---
 
 <a class="tile" href={href} data-status={status}>
@@ -45,6 +51,13 @@ const {
   <p class="tile__summary font-serif">
     {summary}
   </p>
+  {stackTags.length > 0 && (
+    <ul class="tile__stack" aria-label="stack">
+      {stackTags.map((t) => (
+        <li class="stack-chip font-mono">{t}</li>
+      ))}
+    </ul>
+  )}
   <span class="tile__arrow font-mono text-mono-sm" aria-hidden="true">
     read &rarr;
   </span>
@@ -100,6 +113,14 @@ const {
     line-height: 1.6;
     margin: 0;
     max-width: 60ch;
+  }
+  .tile__stack {
+    list-style: none;
+    margin: 0.4rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
   }
   .tile__arrow {
     color: var(--color-muted);

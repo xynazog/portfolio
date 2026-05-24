@@ -8,12 +8,15 @@
 interface NavLink {
   label: string;
   href: string;
+  external?: boolean;
+  hideOnNarrow?: boolean;
 }
 
 const links: NavLink[] = [
   { label: "work",   href: "/#work" },
-  { label: "now",    href: "/#now" },
+  { label: "about",  href: "/#about", hideOnNarrow: true },
   { label: "say hi", href: "/#say-hi" },
+  { label: "resume", href: "/resume.pdf", external: true },
 ];
 ---
 
@@ -27,8 +30,14 @@ const links: NavLink[] = [
     <nav aria-label="primary">
       <ul class="nav__list">
         {links.map((l) => (
-          <li>
-            <a class="nav__link font-mono text-mono-sm" href={l.href}>
+          <li class:list={[l.hideOnNarrow && "nav__item--wide"]}>
+            <a
+              class="nav__link font-mono text-mono-sm"
+              href={l.href}
+              {...(l.external
+                ? { target: "_blank", rel: "noopener" }
+                : {})}
+            >
               {l.label}
             </a>
           </li>
@@ -78,6 +87,9 @@ const links: NavLink[] = [
     display: flex;
     gap: clamp(1.25rem, 3vw, 2.25rem);
     margin: 0; padding: 0;
+  }
+  @media (max-width: 480px) {
+    .nav__item--wide { display: none; }
   }
   .nav__link {
     color: var(--color-muted);

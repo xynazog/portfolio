@@ -53,7 +53,6 @@ export const caseStudies: CaseStudy[] = [
     scope:
       "Identity, access management, and platform integrations for Splunk Observability Cloud",
     team: "10 engineers (US + distributed)",
-    // TODO(ankit): resume lists these as general infra — confirm which actually ship on this surface.
     stack: "Go, Java, Kubernetes, AWS, PostgreSQL",
     problem:
       "Splunk had two major clouds — Enterprise Cloud and Observability Cloud — that enterprise customers wanted to use together but couldn't. Identity, sessions, and access control were duplicated across both. Customers provisioned users twice, managed two SSO integrations, and lived without a shared authorization model. The existing identity stack didn't have the abstractions to unify them cleanly, and there was no fine-grained RBAC on the Observability side.",
@@ -102,8 +101,7 @@ export const caseStudies: CaseStudy[] = [
       "Tech lead on Log Observer Connect and the early Unified Identity work — cut core search latency 60% and onboarded 200+ customers to a brand-new cross-platform workflow.",
     role: "Senior Software Engineer, Tech Lead",
     scope: "Log Observer Connect (LOC) + Unified Identity foundations",
-    // TODO(ankit): confirm pod size — guessing 3–5 from your note.
-    team: "3–5 engineers (tech-lead pod)",
+    team: "5 engineers (tech-lead pod)",
     stack: "Go, Java, JavaScript, Splunk internal data infrastructure, AWS",
     problem:
       "Log Observer was Splunk's point-and-click logs exploration tool — but query latency on the core search path was painful, and pain in incident troubleshooting is the worst kind of pain (people are angry and watching). On top of that, Splunk Enterprise customers with years of data and workflows in the older platform had no clean way to use Log Observer against their existing data — the two platforms were islands. A bridge was needed, and it needed to be performant enough that customers would actually use it mid-incident.",

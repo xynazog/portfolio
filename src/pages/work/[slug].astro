@@ -16,6 +16,7 @@ interface Props {
 
 const { study } = Astro.props;
 const shippedHeader = study.shippedHeader ?? "What we shipped";
+const stackTags = study.stack.split(",").map((s) => s.trim()).filter(Boolean);
 ---
 
 <Base title={`${study.title} — Ankit Bhagat`}>
@@ -48,7 +49,13 @@ const shippedHeader = study.shippedHeader ?? "What we shipped";
           </div>
           <div>
             <dt class="font-mono text-mono-sm">stack</dt>
-            <dd>{study.stack}</dd>
+            <dd>
+              <ul class="case-study__stack" aria-label="stack">
+                {stackTags.map((t) => (
+                  <li class="stack-chip font-mono">{t}</li>
+                ))}
+              </ul>
+            </dd>
           </div>
         </dl>
       </aside>
@@ -174,6 +181,14 @@ const shippedHeader = study.shippedHeader ?? "What we shipped";
     color: var(--color-fg);
     font-family: var(--font-serif);
     margin: 0;
+  }
+  .case-study__stack {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
   }
 
   .case-study__prose section { margin-bottom: clamp(2.25rem, 4vw, 3.5rem); }
